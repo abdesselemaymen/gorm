@@ -187,6 +187,8 @@ func (scope *Scope) handleHasManyPreload(field *Field, conditions []interface{})
 	query := fmt.Sprintf("%v IN (%v)", toQueryCondition(scope, relation.ForeignDBNames), toQueryMarks(primaryKeys))
 	values := toQueryValues(primaryKeys)
 	if relation.PolymorphicType != "" {
+		newTableName := strings.Split(relation.PolymorphicValue, ".")
+		relation.PolymorphicValue = newTableName[len(newTableName)-1]
 		query += fmt.Sprintf(" AND %v = ?", scope.Quote(relation.PolymorphicDBName))
 		values = append(values, relation.PolymorphicValue)
 	}
